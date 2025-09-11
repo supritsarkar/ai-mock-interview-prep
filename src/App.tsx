@@ -13,7 +13,6 @@ import {MainLayout} from './layouts/main-layout';
 
 export default function App() {
   return (
-   <Router>
      <Routes>
           {/* public routes this is the default route for the index */}
                <Route element={<Publiclayout/>}>
@@ -32,9 +31,8 @@ export default function App() {
       }
       >
        {/* add your protected routes here */}
-       
+
       </Route>
-    </Routes>
-    </Router>  
+    </Routes>  
   );
 }

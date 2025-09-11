@@ -1,5 +1,5 @@
-import { Footer } from "@/components/footer";
-import { Header } from "@/components/header";
+import { Footer } from "@/components/ui/footer";
+import { Header } from "@/components/ui/header";
 import Container from "@/components/ui/container";
 import { Outlet } from "react-router";
 
