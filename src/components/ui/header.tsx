@@ -15,27 +15,33 @@ export const Header = () => {
       <Container>
         <div className="flex items-center gap-4 w-full">
           {/* logo section */}
-          <LogoContainer />
-
+          <div className="w-full h-full max-w-8 rounded-4xl ">
+            <LogoContainer />
+          </div>
           {/* navigation section */}
-          <nav className="hidden md:flex items-center gap-3">
-            <NavigationRoutes/>
-            {
-              userId && (
-                 <NavLink to={"/generate"} className={({isActive})=>cn("text-base text-neutral-600  ml-4", isActive && "text-neutral-900 font-semibold")}>Take An Interview</NavLink>
-              )
-            }
+          <nav className="hidden md:flex items-center gap-3  ">
+            <NavigationRoutes />
+            {userId && (
+              <NavLink
+                to={"/generate"}
+                className={({ isActive }) =>
+                  cn(
+                    "text-base text-neutral-600  ml-4",
+                    isActive && "text-neutral-900 font-semibold"
+                  )
+                }
+              >
+                Take An Interview
+              </NavLink>
+            )}
           </nav>
 
-          
-           <div className="ml-auto flex items-center gap-6">
+          <div className="ml-auto flex items-center gap-6">
             {/* profile section */}
-            <ProfileContainer/>
+            <ProfileContainer />
             {/*mobile toggle section*/}
-            <ToggleContainer/>
-             
-           </div>
-
+            <ToggleContainer />
+          </div>
         </div>
       </Container>
     </header>
