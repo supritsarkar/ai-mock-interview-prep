@@ -2,7 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import type { Interview } from "@/types";
-import { CustomBreadCrumb } from "@/components/custom-bread-crumb";
+import { CustomBreadCrumb } from "@/components/ui/custom-bread-crumb";
 import { useEffect, useState } from "react";
 import { data, replace, useNavigate } from "react-router";
 import { useAuth } from "@clerk/clerk-react";
@@ -90,35 +90,32 @@ export const FormMockInterview = ({ initialData }: FormMockInterviewProps) => {
     : { title: "Created..!", description: "New Mock Interview Created..." };
 
   //clear out the generated response
-  const cleanAiResponse = (responseText: string) => {
-    let cleanText = responseText.trim();
-
-    // 1️⃣ Remove Markdown formatting (```json ... ```)
-    cleanText = cleanText.replace(/```json|```/gi, "");
-
-    // 2️⃣ Extract JSON array or object
-    const jsonMatch = cleanText.match(/\[[\s\S]*?\]|\{[\s\S]*?\}/);
-    if (jsonMatch) {
-      cleanText = jsonMatch[0];
-    } else {
-      console.error("❌ Raw AI Response:", responseText);
-      throw new Error("No JSON structure found in the AI response.");
-    }
-
-    // 3️⃣ Fix common JSON issues
-    cleanText = cleanText
-      .replace(/[“”]/g, '"') // Replace curly quotes
-      .replace(/'/g, '"') // Replace single with double quotes
-      .replace(/,\s*([\]}])/g, "$1") // Remove trailing commas
-      .replace(/[\u200B-\u200D\uFEFF]/g, "") // Remove zero-width spaces
-      .replace(/(\w)"(\w)/g, "$1'$2"); // Fix unescaped double quotes like haven"t
-
-    // 4️⃣ Try parsing the cleaned string
+  const cleanAiResponse = (rawText: string) => {
     try {
-      return JSON.parse(cleanText);
-    } catch (error) {
-      console.error("❌ Cleaned AI Response:", cleanText);
-      throw new Error("Failed to parse AI response as JSON: " + error);
+      // remove code fences
+      let text = rawText.replace(/```json|```/gi, "").trim();
+
+      // If AI forgot to add [ ... ], wrap it yourself
+      if (!text.trim().startsWith("[")) {
+        text = `[${text}]`;
+      }
+
+      // Remove trailing commas
+      text = text.replace(/,\s*}/g, "}"); //Whenever you find a pattern like , }, replace it with only }
+      text = text.replace(/,\s*]/g, "]");
+
+      // Parse JSON
+      const parsed = JSON.parse(text);
+
+      if (!Array.isArray(parsed)) {
+        throw new Error("JSON is not an array");
+      }
+
+      return parsed;
+    } catch (err) {
+      console.error("RAW:", rawText);
+      console.error("CLEAN FAILED:", err);
+      throw new Error("AI returned invalid JSON");
     }
   };
 
