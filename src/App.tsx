@@ -14,6 +14,7 @@ import { Dashboard } from "./routes/dashboard";
 import { CreateEditPage } from "./routes/create-edit-page";
 import { MockLoadPage } from "./routes/mock-load-page";
 import { MockInterviewPage } from "./routes/mock-interview-page";
+import { Feedback } from "./routes/feedback";
 
 export default function App() {
   return (
@@ -37,10 +38,13 @@ export default function App() {
       >
         {/* add your protected routes here */}
         <Route element={<Generate />} path="/generate">
+         {/* An index route means: This should show when the parent route itself is visited. */}
           <Route index element={<Dashboard />} />
           <Route path=":interviewId" element={<CreateEditPage />} />
-          <Route path="interview/:interviewId" element={<MockLoadPage/>}></Route>
-          <Route path="interview/:interviewId/start" element={<MockInterviewPage/>}> </Route>
+          <Route path="interview/:interviewId" element={<MockLoadPage />} />
+          <Route path="interview/:interviewId/start" element={<MockInterviewPage />} />
+          {/* FIXED: feedback directly under /generate */}
+          <Route path="feedback/:interviewId" element={<Feedback />} />
         </Route>
       </Route>
     </Routes>
